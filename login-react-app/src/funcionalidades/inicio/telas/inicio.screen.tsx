@@ -1,17 +1,18 @@
 import { Button, Card, Col, Divider, Dropdown, Form, List, Menu, Modal, Row, Statistic, Table, Tag, Typography } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { CalendarOutlined, EditOutlined } from '@ant-design/icons';
+import { env } from '@infra/env';
 
 const { Title } = Typography;
 
 export const InicioScreen: FC = () => {
   const searchParams = new URLSearchParams(document.location.search);
-  const [usuario, setUsuario] = useState('');
-  const [senha, setSenha] = useState('');
+  const [usuario, setUsuario] = useState(`${env.USUARIO}`);
+  const [senha, setSenha] = useState(`${env.SENHA}`);
   const [codigoAutorizacao, setCodigoAutorizacao] = useState('');
 
   const carregarCodigoAutorizacao = async () => {
-    const response = await fetch(`https://localhost:7210/api/auth/code?${searchParams.toString()}`).then((response) => response.json())
+    const response = await fetch(`${env.API_URL}/api/auth/code?${searchParams.toString()}`).then((response) => response.json())
     setCodigoAutorizacao(response.data.codigoAutorizacao);
   };
 
@@ -22,7 +23,7 @@ export const InicioScreen: FC = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    const response = await fetch('https://localhost:7210/api/auth/login', {  // Enter your IP address here
+    const response = await fetch(`${env.API_URL}/api/auth/login`, {  // Enter your IP address here
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
